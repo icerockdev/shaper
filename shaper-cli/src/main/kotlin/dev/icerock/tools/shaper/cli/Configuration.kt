@@ -4,11 +4,29 @@
 
 package dev.icerock.tools.shaper.cli
 
+import dev.icerock.tools.shaper.core.Config
 import org.yaml.snakeyaml.Yaml
 import java.io.File
 
 class Configuration(private val map: Map<String, Any>) {
-    val packageName: String get() = map["packageName"] as String
+
+    fun buildShaperConfig(): Config {
+        val globalParams = map["globalParams"] as? Map<String, Any>
+        val files = map["files"] as? List<Map<String, Any>>
+
+        val filesConfigs: List<Config.FileConfig> = files?.map { fileMap ->
+            Config.FileConfig(
+                pathTemplate = fileMap["pathTemplate"] as String,
+                contentTemplateName = fileMap["contentTemplateName"] as String,
+                templateParams = (fileMap["templateParams"] as? Map<String, Any>).orEmpty()
+            )
+        }.orEmpty()
+
+        return Config(
+            globalParams = globalParams.orEmpty(),
+            files = filesConfigs
+        )
+    }
 
     companion object {
         fun read(filePath: String): Configuration {

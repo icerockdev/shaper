@@ -6,6 +6,8 @@ package dev.icerock.tools.shaper.core
 
 import com.github.jknack.handlebars.Handlebars
 import com.github.jknack.handlebars.Helper
+import com.github.jknack.handlebars.io.TemplateSource
+import com.github.jknack.handlebars.io.URLTemplateSource
 import java.io.File
 import java.io.FileWriter
 
@@ -28,10 +30,20 @@ class Shaper(private val config: Config) {
                 if (!exists()) mkdirs()
             }
 
-            val contentTemplate = handlebars.compile(fileConfig.contentTemplateName)
+            val templateSource = getTemplateSource(fileConfig.contentTemplateName)
+            val contentTemplate = handlebars.compile(templateSource)
             FileWriter(file).use { fileWriter ->
                 contentTemplate.apply(allParams, fileWriter)
             }
+        }
+    }
+
+    private fun getTemplateSource(templateName: String): TemplateSource {
+        val templateFile = File("$templateName.hbs")
+        return if (templateFile.exists()) {
+            FileTemplateSource(templateFile)
+        } else {
+            URLTemplateSource(templateName, javaClass.getResource(templateName))
         }
     }
 }
