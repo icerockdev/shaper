@@ -28,5 +28,5 @@ fun main(args: Array<String>) {
 
     val config: Configuration = Configuration.read(input)
 
-    val shaper = Shaper()
+    val shaper = Shaper(config = TODO())
 }

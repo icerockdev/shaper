@@ -20,7 +20,7 @@ class Configuration(private val map: Map<String, Any>) {
             val map: Map<String, Any> = file.inputStream().use { stream ->
                 val yaml = Yaml()
                 yaml.load(stream)
-            }
+            } ?: throw IllegalArgumentException("configuration is empty at $file")
 
             return Configuration(map)
         }
