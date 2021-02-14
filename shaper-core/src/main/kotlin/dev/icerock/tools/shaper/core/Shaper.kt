@@ -39,11 +39,12 @@ class Shaper(private val config: Config) {
     }
 
     private fun getTemplateSource(templateName: String): TemplateSource {
-        val templateFile = File("$templateName.hbs")
+        val templateNameHbs = "$templateName.hbs"
+        val templateFile = File(templateNameHbs)
         return if (templateFile.exists()) {
             FileTemplateSource(templateFile)
         } else {
-            URLTemplateSource(templateName, javaClass.getResource(templateName))
+            URLTemplateSource(templateName, this::class.java.classLoader.getResource(templateNameHbs))
         }
     }
 }
