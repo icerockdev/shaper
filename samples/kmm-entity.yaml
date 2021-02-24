@@ -1,0 +1,11 @@
+globalParams:
+  packageName: dev.icerock.shaper.sample.entity.user
+  moduleName: User
+
+files:
+  - pathTemplate: 'build.gradle.kts'
+    contentTemplateName: kmm-entity/build.gradle.kts
+  - pathTemplate: 'src/commonMain/kotlin/{{packagePath packageName}}/{{moduleName}}.kt'
+    contentTemplateName: kmm-entity/Entity.kt
+  - pathTemplate: 'src/androidMain/AndroidManifest.xml'
+    contentTemplateName: kmm-entity/AndroidManifest.xml
