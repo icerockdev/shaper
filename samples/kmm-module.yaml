@@ -21,3 +21,8 @@ files:
     contentTemplateName: kmm-module/Empty.kt
   - pathTemplate: 'src/iosMain/kotlin/{{packagePath packageName}}/Empty.kt'
     contentTemplateName: kmm-module/Empty.kt
+outputs:
+  - title: 'Append next line to \"settings.gradle.kts\":\n'
+    contentTemplateName: kmm-module/settings.output
+    templateParams:
+      packageIncludeName: '{{packageIncludeName moduleName}}'

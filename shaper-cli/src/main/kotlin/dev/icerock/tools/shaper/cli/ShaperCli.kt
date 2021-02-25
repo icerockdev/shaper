@@ -29,5 +29,6 @@ fun main(args: Array<String>) {
     val config: Configuration = Configuration.read(input)
 
     val shaper = Shaper(config = config.buildShaperConfig())
-    shaper.execute(output)
+    val consoleResult = shaper.execute(output)
+    System.console().printf(consoleResult)
 }

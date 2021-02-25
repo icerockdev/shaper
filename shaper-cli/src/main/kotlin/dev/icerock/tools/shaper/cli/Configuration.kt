@@ -22,9 +22,19 @@ class Configuration(private val map: Map<String, Any>) {
             )
         }.orEmpty()
 
+        val outputs = map["outputs"] as? List<Map<String, Any>>
+        val outputsConfigs: List<Config.OutputConfig> = outputs?.map { fileMap ->
+            Config.OutputConfig(
+                outputTitle = fileMap["title"] as String,
+                contentTemplateName = fileMap["contentTemplateName"] as String,
+                templateParams = (fileMap["templateParams"] as? Map<String, Any>).orEmpty()
+            )
+        }.orEmpty()
+
         return Config(
             globalParams = globalParams.orEmpty(),
-            files = filesConfigs
+            files = filesConfigs,
+            outputs = outputsConfigs
         )
     }
 

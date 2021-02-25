@@ -6,10 +6,17 @@ package dev.icerock.tools.shaper.core
 
 data class Config(
     val globalParams: Map<String, Any>,
-    val files: List<FileConfig>
+    val files: List<FileConfig>,
+    val outputs: List<OutputConfig>
 ) {
     data class FileConfig(
         val pathTemplate: String,
+        val contentTemplateName: String,
+        val templateParams: Map<String, Any>
+    )
+
+    data class OutputConfig(
+        val outputTitle: String,
         val contentTemplateName: String,
         val templateParams: Map<String, Any>
     )
