@@ -1,0 +1,24 @@
+1. Move *out folder to mpp-library/features
+2. Rename it to '{{packageIncludeName moduleName}}'
+3. Append next line to 'settings.gradle.kts':
+
+include(":mpp-library:feature:{{packageIncludeName moduleName}}")
+
+4. Append next property to you Deps.kt file (should be in ./buildSrc/main/kotlin)
+in Modules.Feature
+```
+        object Feature {
+            val {{packageIncludeName moduleName}} = MultiPlatformModule(
+                name = ":mpp-library:feature:{{packageIncludeName moduleName}}",
+                exported = true
+            )
+```
+
+5. Include feature in you project root 'build.gradle.kts':
+```
+val mppModules = listOf(
+...
+//append here
+    Deps.Modules.Feature.{{packageIncludeName moduleName}}
+)
+```
