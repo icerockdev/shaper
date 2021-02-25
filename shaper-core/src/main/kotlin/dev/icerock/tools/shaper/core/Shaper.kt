@@ -10,13 +10,19 @@ import com.github.jknack.handlebars.io.TemplateSource
 import com.github.jknack.handlebars.io.URLTemplateSource
 import java.io.File
 import java.io.FileWriter
+import java.io.StringWriter
 
 class Shaper(private val config: Config) {
 
-    fun execute(output: String) {
+    fun execute(outputPath: String): String {
         val handlebars = Handlebars()
         handlebars.registerHelper("packagePath", Helper<String> { context, _ ->
             context.replace('.', '/')
+        })
+
+        //Use with module name
+        handlebars.registerHelper("packageIncludeName", Helper<String> { context, _ ->
+            context.toLowerCase()
         })
 
         config.files.forEach { fileConfig ->
@@ -25,7 +31,7 @@ class Shaper(private val config: Config) {
             val fileNameTemplate = handlebars.compileInline(fileConfig.pathTemplate)
             val filePath = fileNameTemplate.apply(allParams)
 
-            val file = File(output, filePath)
+            val file = File(outputPath, filePath)
             with(file.parentFile) {
                 if (!exists()) mkdirs()
             }
@@ -36,6 +42,18 @@ class Shaper(private val config: Config) {
                 contentTemplate.apply(allParams, fileWriter)
             }
         }
+        val resultWriter = StringWriter()
+        config.outputs.forEach() { outputConfig ->
+            resultWriter.write(outputConfig.outputTitle)
+            resultWriter.appendLine()
+            val allParams = config.globalParams + outputConfig.templateParams
+            val templateSource = getTemplateSource(outputConfig.contentTemplateName)
+            val contentTemplate = handlebars.compile(templateSource)
+
+            contentTemplate.apply(allParams,resultWriter)
+            resultWriter.appendLine()
+        }
+        return resultWriter.toString()
     }
 
     private fun getTemplateSource(templateName: String): TemplateSource {
