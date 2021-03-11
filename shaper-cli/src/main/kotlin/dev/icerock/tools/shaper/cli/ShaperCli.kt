@@ -30,5 +30,5 @@ fun main(args: Array<String>) {
 
     val shaper = Shaper(config = config.buildShaperConfig())
     val consoleResult = shaper.execute(output)
-    System.console().printf(consoleResult)
+    println(consoleResult)
 }

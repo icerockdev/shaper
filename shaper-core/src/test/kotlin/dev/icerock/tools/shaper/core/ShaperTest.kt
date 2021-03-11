@@ -18,7 +18,7 @@ class ShaperTest {
             templateParams = mapOf("dependencies" to listOf("dep1", "dep2"))
         )
         val sourceCodeFile = Config.FileConfig(
-            pathTemplate = "src/main/kotlin/{{packagePath packageName}}/Test.kt",
+            pathTemplate = "src/main/kotlin/{{dts packageName}}/Test.kt",
             contentTemplateName = "Test.kt.hbs",
             templateParams = mapOf("packageName" to "dev.icerock.test")
         )

@@ -16,13 +16,17 @@ class Shaper(private val config: Config) {
 
     fun execute(outputPath: String): String {
         val handlebars = Handlebars()
-        handlebars.registerHelper("packagePath", Helper<String> { context, _ ->
+        handlebars.registerHelper("dts", Helper<String> { context, _ ->
             context.replace('.', '/')
         })
-
-        //Use with module name
-        handlebars.registerHelper("packageIncludeName", Helper<String> { context, _ ->
+        handlebars.registerHelper("lcs", Helper<String> { context, _ ->
             context.toLowerCase()
+        })
+        handlebars.registerHelper("cap", Helper<String> { context, _ ->
+            context.capitalize()
+        })
+        handlebars.registerHelper("ucs", Helper<String> { context, _ ->
+            context.toUpperCase()
         })
 
         config.files.forEach { fileConfig ->
