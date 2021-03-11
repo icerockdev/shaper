@@ -1,0 +1,13 @@
+globalParams:
+  packageName: ru.rosseti.app
+  feature: auth
+  screen: Auth
+
+files:
+  - pathTemplate: 'android-app/src/main/java/{{packagePath packageName}}/feature/{{packagePath feature}}/{{packagePath screen}}Fragment.kt'
+    contentTemplateName: android-fragment/fragment.kt
+  - pathTemplate: 'android-app/src/main/res/layout/fragment_{{packagePath feature}}.xml'
+    contentTemplateName: android-fragment/layout.xml
+outputs:
+  - title: '=== Tips for feature setup ==='
+    contentTemplateName: android-fragment/console.output

@@ -1,0 +1,31 @@
+package {{packageName}}.feature.{{feature}}
+
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
+import dev.icerock.moko.mvvm.viewbinding.MvvmEventsFragment
+import {{packageName}}.databinding.FragmentAuthBinding
+
+class {{screen}}Fragment :
+    MvvmEventsFragment<Fragment{{screen}}Binding, {{screen}}ViewModel, {{screen}}ViewModel.EventsListener>(),
+    {{screen}}ViewModel.EventsListener {
+    override val viewModelClass: Class<{{screen}}ViewModel> = {{screen}}ViewModel::class.java
+
+    override fun viewBindingInflate(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentAuthBinding {
+        return Fragment{{screen}}Binding.inflate(layoutInflater, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+    }
+
+    override fun viewModelFactory(): ViewModelProvider.Factory {
+        TODO("Not yet implemented")
+    }
+}
