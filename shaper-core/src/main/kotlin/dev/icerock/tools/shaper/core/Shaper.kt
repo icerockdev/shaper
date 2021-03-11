@@ -57,12 +57,11 @@ class Shaper(private val config: Config) {
     }
 
     private fun getTemplateSource(templateName: String): TemplateSource {
-        val templateNameHbs = "$templateName.hbs"
-        val templateFile = File(templateNameHbs)
+        val templateFile = File(templateName)
         return if (templateFile.exists()) {
             FileTemplateSource(templateFile)
         } else {
-            URLTemplateSource(templateName, this::class.java.classLoader.getResource(templateNameHbs))
+            URLTemplateSource(templateName, this::class.java.classLoader.getResource(templateName))
         }
     }
 }

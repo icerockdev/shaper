@@ -4,7 +4,7 @@ globalParams:
 
 files:
   - pathTemplate: 'build.gradle.kts'
-    contentTemplateName: kmm-module/build.gradle.kts
+    contentTemplateName: kmm-module/build.gradle.kts.hbs
     templateParams:
       androidMainDeps:
         - lifecycle
@@ -14,13 +14,13 @@ files:
         - mokoResources
         - napier
   - pathTemplate: 'src/commonMain/kotlin/{{packagePath packageName}}/di/{{moduleName}}Factory.kt'
-    contentTemplateName: kmm-module/Factory.kt
+    contentTemplateName: kmm-module/Factory.kt.hbs
   - pathTemplate: 'src/androidMain/AndroidManifest.xml'
-    contentTemplateName: kmm-module/AndroidManifest.xml
+    contentTemplateName: kmm-module/AndroidManifest.xml.hbs
   - pathTemplate: 'src/androidMain/kotlin/{{packagePath packageName}}/Empty.kt'
     contentTemplateName: kmm-module/Empty.kt
   - pathTemplate: 'src/iosMain/kotlin/{{packagePath packageName}}/Empty.kt'
     contentTemplateName: kmm-module/Empty.kt
 outputs:
   - title: '=== Tips for feature setup ==='
-    contentTemplateName: kmm-module/console.output
+    contentTemplateName: kmm-module/console.output.hbs
