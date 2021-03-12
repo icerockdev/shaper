@@ -16,13 +16,26 @@ class Shaper(private val config: Config) {
 
     fun execute(outputPath: String): String {
         val handlebars = Handlebars()
-        handlebars.registerHelper("packagePath", Helper<String> { context, _ ->
+        handlebars.registerHelper("dts", Helper<String> { context, _ ->
             context.replace('.', '/')
         })
-
-        //Use with module name
-        handlebars.registerHelper("packageIncludeName", Helper<String> { context, _ ->
+        handlebars.registerHelper("lcs", Helper<String> { context, _ ->
             context.toLowerCase()
+        })
+        handlebars.registerHelper("cap", Helper<String> { context, _ ->
+            context.capitalize()
+        })
+        handlebars.registerHelper("ucs", Helper<String> { context, _ ->
+            context.toUpperCase()
+        })
+        handlebars.registerHelper("cts", Helper<String> { context, _ ->
+            context.camelToSnakeCase()
+        })
+        handlebars.registerHelper("stl", Helper<String> { context, _ ->
+            context.snakeToLowerCamelCase()
+        })
+        handlebars.registerHelper("stu", Helper<String> { context, _ ->
+            context.snakeToUpperCamelCase()
         })
 
         config.files.forEach { fileConfig ->
@@ -57,12 +70,11 @@ class Shaper(private val config: Config) {
     }
 
     private fun getTemplateSource(templateName: String): TemplateSource {
-        val templateNameHbs = "$templateName.hbs"
-        val templateFile = File(templateNameHbs)
+        val templateFile = File(templateName)
         return if (templateFile.exists()) {
             FileTemplateSource(templateFile)
         } else {
-            URLTemplateSource(templateName, this::class.java.classLoader.getResource(templateNameHbs))
+            URLTemplateSource(templateName, this::class.java.classLoader.getResource(templateName))
         }
     }
 }

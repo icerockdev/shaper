@@ -14,12 +14,12 @@ class ShaperTest {
     fun `generation of gradle module`() {
         val buildGradleFile = Config.FileConfig(
             pathTemplate = "build.gradle.kts",
-            contentTemplateName = "build.gradle.kts",
+            contentTemplateName = "build.gradle.kts.hbs",
             templateParams = mapOf("dependencies" to listOf("dep1", "dep2"))
         )
         val sourceCodeFile = Config.FileConfig(
-            pathTemplate = "src/main/kotlin/{{packagePath packageName}}/Test.kt",
-            contentTemplateName = "Test.kt",
+            pathTemplate = "src/main/kotlin/{{dts packageName}}/Test.kt",
+            contentTemplateName = "Test.kt.hbs",
             templateParams = mapOf("packageName" to "dev.icerock.test")
         )
         val config = Config(

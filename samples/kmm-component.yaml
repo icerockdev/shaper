@@ -1,0 +1,5 @@
+globalParams:
+  packageName: dev.icerock.shaper.sample.kmm.news
+  moduleName: news
+
+files: kmm-component/
