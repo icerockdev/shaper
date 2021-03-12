@@ -17,28 +17,12 @@ class Configuration(private val map: Map<String, Any>) {
         val filesList = files as? List<Map<String, Any>>
         val filesDirectory = files as? String
 
-        val filesConfigs: List<Config.FileConfig>
-
-        if (filesList != null) {
-            filesConfigs = filesList.map { fileMap ->
-                Config.FileConfig(
-                    pathTemplate = fileMap["pathTemplate"] as String,
-                    contentTemplateName = fileMap["contentTemplateName"] as String,
-                    templateParams = (fileMap["templateParams"] as? Map<String, Any>).orEmpty()
-                )
-            }
-        } else if (filesDirectory != null) {
-            val filesDir = File(filesDirectory)
-            val rootPrefix = filesDir.path + "/"
-            filesConfigs = filesDir.walkTopDown().filterNot { it.isDirectory }.map {
-                Config.FileConfig(
-                    pathTemplate = it.path.removeSuffix(".hbs").removePrefix(rootPrefix),
-                    contentTemplateName = it.path,
-                    templateParams = emptyMap()
-                )
-            }.toList()
-        } else {
-            filesConfigs = emptyList()
+        val filesConfigs: List<Config.FileConfig>? = filesList?.map { fileMap ->
+            Config.FileConfig(
+                pathTemplate = fileMap["pathTemplate"] as String,
+                contentTemplateName = fileMap["contentTemplateName"] as String,
+                templateParams = (fileMap["templateParams"] as? Map<String, Any>).orEmpty()
+            )
         }
 
         val outputs = map["outputs"] as? List<Map<String, Any>>
@@ -50,11 +34,19 @@ class Configuration(private val map: Map<String, Any>) {
             )
         }.orEmpty()
 
-        return Config(
-            globalParams = globalParams.orEmpty(),
-            files = filesConfigs,
-            outputs = outputsConfigs
-        )
+        return if (filesDirectory != null) {
+            Config(
+                globalParams = globalParams.orEmpty(),
+                directory = filesDirectory,
+                outputs = outputsConfigs
+            )
+        } else {
+            Config(
+                globalParams = globalParams.orEmpty(),
+                files = filesConfigs.orEmpty(),
+                outputs = outputsConfigs
+            )
+        }
     }
 
     companion object {
