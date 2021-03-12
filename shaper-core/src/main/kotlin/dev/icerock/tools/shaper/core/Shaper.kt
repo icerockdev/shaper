@@ -28,6 +28,15 @@ class Shaper(private val config: Config) {
         handlebars.registerHelper("ucs", Helper<String> { context, _ ->
             context.toUpperCase()
         })
+        handlebars.registerHelper("cts", Helper<String> { context, _ ->
+            context.camelToSnakeCase()
+        })
+        handlebars.registerHelper("stl", Helper<String> { context, _ ->
+            context.snakeToLowerCamelCase()
+        })
+        handlebars.registerHelper("stu", Helper<String> { context, _ ->
+            context.snakeToUpperCamelCase()
+        })
 
         config.files.forEach { fileConfig ->
             val allParams = config.globalParams + fileConfig.templateParams
