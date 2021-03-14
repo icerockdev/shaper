@@ -12,22 +12,22 @@ import kotlin.test.assertEquals
 class ShaperTest {
     @Test
     fun `generation of gradle module`() {
-        val buildGradleFile = Config.FileConfig(
+        val buildGradleFile = TemplateConfig.FileConfig(
             pathTemplate = "build.gradle.kts",
             contentTemplateName = "build.gradle.kts.hbs",
             templateParams = mapOf("dependencies" to listOf("dep1", "dep2"))
         )
-        val sourceCodeFile = Config.FileConfig(
+        val sourceCodeFile = TemplateConfig.FileConfig(
             pathTemplate = "src/main/kotlin/{{dts packageName}}/Test.kt",
             contentTemplateName = "Test.kt.hbs",
             templateParams = mapOf("packageName" to "dev.icerock.test")
         )
-        val config = Config(
+        val config = TemplateConfig(
             globalParams = mapOf("packageName" to "dev.icerock"),
             files = listOf(buildGradleFile, sourceCodeFile),
             outputs = emptyList()
         )
-        val shaper = Shaper(config)
+        val shaper = Shaper(templateConfig = config)
 
         shaper.execute("build/test")
 
