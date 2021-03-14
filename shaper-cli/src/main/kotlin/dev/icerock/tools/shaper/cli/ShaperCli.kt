@@ -31,43 +31,13 @@ fun main(args: Array<String>) {
     val shaperConfig = ShaperConfig.read()
     val templatesRepository = TemplatesRepository(shaperConfig)
     val config = templatesRepository.getTemplateConfig(input)
+    val configOverrider = ConfigOverrider()
 
     val overridenConfig = config.copy(
-        globalParams = overrideMap(config.globalParams)
+        globalParams = configOverrider.override(config.globalParams)
     )
 
     val shaper = Shaper(templateConfig = overridenConfig)
     val consoleResult = shaper.execute(output)
     println(consoleResult)
-}
-
-private fun overrideMap(map: Map<String, Any>, path: String? = null): Map<String, Any> {
-    val prefix = path?.plus(":") ?: ""
-    return map.mapValues {
-        overrideValue(prefix + it.key, it.value)
-    }
-}
-
-private fun overrideValue(path: String, value: Any): Any {
-    return when(value) {
-        is String -> overrideString(path, value)
-        is List<*> -> overrideList(path, value)
-        is Map<*, *> -> overrideMap(map = value as Map<String, Any>, path = path)
-        else -> value
-    }
-}
-
-private fun overrideString(path: String, value: String): String {
-    println("Input $path value")
-    println("Default: $value (Press enter to skip change)")
-    val input = readLine() ?: return value
-    val overridenValue = input.ifBlank { value }
-    println("$path = $overridenValue")
-    return overridenValue
-}
-
-private fun overrideList(path: String, value: List<*>): List<*> {
-    return value.mapIndexed { index, item ->
-        overrideValue("$path:$index", item as Any)
-    }
 }
