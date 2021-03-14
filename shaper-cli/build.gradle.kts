@@ -26,3 +26,17 @@ tasks.withType<org.gradle.jvm.tasks.Jar>().configureEach {
             .map { zipTree(it) }
     })
 }
+
+// export PATH=~/.shaper/shaper-cli/bin:$PATH
+tasks.create("install") {
+    dependsOn(tasks.getByName("installDist"))
+    group = "distribution"
+
+    doFirst {
+        copy {
+            val userHome = System.getProperty("user.home")
+            from(file("$buildDir/install"))
+            into(file("$userHome/.shaper"))
+        }
+    }
+}
