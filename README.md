@@ -4,78 +4,10 @@ Kotlin library and command line tool for generation of directory with files from
 Handlebars) and configuration.
 
 # Install
+
 `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/icerockdev/shaper/master/install-shaper.sh)"`
 
 # Usage
-
-## Core
-
-Core is kotlin library, for integration in cli-app, idea plugin, gradle plugin, etc.
-
-Using is simple:
-
-```kotlin
-import dev.icerock.tools.shaper.core.Config
-import dev.icerock.tools.shaper.core.Shaper
-
-// describe files configuration for generator
-val buildGradleFile = Config.FileConfig(
-    // path of output file
-    pathTemplate = "build.gradle.kts",
-    // name of template file used for content of file
-    contentTemplateName = "build.gradle.kts",
-    // params that will be passed into template
-    templateParams = mapOf("dependencies" to listOf("dep1", "dep2"))
-)
-val sourceCodeFile = Config.FileConfig(
-    // path also support templates and got all params
-    pathTemplate = "src/main/kotlin/{{packagePath packageName}}/Test.kt",
-    contentTemplateName = "Test.kt",
-    templateParams = mapOf("packageName" to "dev.icerock.test")
-)
-
-// describe generator config
-val config = Config(
-    // params that will be passed into template of each files. 
-    // can be overriden by params of file
-    globalParams = mapOf("packageName" to "dev.icerock"),
-    // list of files that should be generated
-    files = listOf(buildGradleFile, sourceCodeFile)
-)
-
-// create generator with configuration
-val shaper = Shaper(config)
-// execute generation into build/test directory
-shaper.execute(output = "build/test")
-```
-
-Templates will be loaded by priority:
-
-1. search at working dir by name
-2. search at resources of ClassLoader by name
-
-Here sample templates:
-`build.gradle.kts.hbs`:
-
-```handlebars
-plugins {
-id("org.jetbrains.kotlin.jvm") version "1.4.30"
-}
-
-dependencies {
-{{#each dependencies}}    implementation("{{this}}")
-{{/each}}
-}
-```
-
-`Test.kt.hbs`:
-
-```handlebars
-package {{packageName}}
-
-class Test {
-}
-```
 
 ## CLI
 
@@ -101,7 +33,77 @@ files:
 To run CLI:
 
 ```shell
-java -jar shaper-cli-0.1.0-SNAPSHOT.jar -i <path-to-yaml> -o <output-directory>
+shaper-cli --help
+```
+
+## Core
+
+Core is kotlin library, for integration in cli-app, idea plugin, gradle plugin, etc.
+
+Using is simple:
+
+```kotlin
+import dev.icerock.tools.shaper.core.TemplateConfig
+import dev.icerock.tools.shaper.core.Shaper
+
+// describe files configuration for generator
+val buildGradleFile = TemplateConfig.FileConfig(
+    // path of output file
+    pathTemplate = "build.gradle.kts",
+    // name of template file used for content of file
+    contentTemplateName = "build.gradle.kts",
+    // params that will be passed into template
+    templateParams = mapOf("dependencies" to listOf("dep1", "dep2"))
+)
+val sourceCodeFile = TemplateConfig.FileConfig(
+    // path also support templates and got all params
+    pathTemplate = "src/main/kotlin/{{packagePath packageName}}/Test.kt",
+    contentTemplateName = "Test.kt",
+    templateParams = mapOf("packageName" to "dev.icerock.test")
+)
+
+// describe generator config
+val config = TemplateConfig(
+    // params that will be passed into template of each files. 
+    // can be overriden by params of file
+    globalParams = mapOf("packageName" to "dev.icerock"),
+    // list of files that should be generated
+    files = listOf(buildGradleFile, sourceCodeFile)
+)
+
+// create generator with configuration
+val shaper = Shaper(config)
+// execute generation into build/test directory
+shaper.execute(output = "build/test")
+```
+
+Templates will be loaded by priority:
+
+1. search at working dir by name
+2. search at template repositories from `~/.shaper/config.yaml`
+2. search at resources of ClassLoader by name
+
+Here sample templates:
+`build.gradle.kts.hbs`:
+
+```handlebars
+plugins {
+id("org.jetbrains.kotlin.jvm") version "1.4.30"
+}
+
+dependencies {
+{{#each dependencies}}    implementation("{{this}}")
+{{/each}}
+}
+```
+
+`Test.kt.hbs`:
+
+```handlebars
+package {{packageName}}
+
+class Test {
+}
 ```
 
 ## License
