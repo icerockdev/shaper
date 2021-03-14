@@ -7,11 +7,9 @@ package dev.icerock.tools.shaper.cli
 import dev.icerock.tools.shaper.core.Shaper
 import dev.icerock.tools.shaper.core.ShaperConfig
 import dev.icerock.tools.shaper.core.TemplatesRepository
-import dev.icerock.tools.shaper.core.YamlConfigReader
 import kotlinx.cli.ArgParser
 import kotlinx.cli.ArgType
 import kotlinx.cli.default
-import java.io.File
 
 fun main(args: Array<String>) {
     val parser = ArgParser("shaper")
@@ -33,7 +31,13 @@ fun main(args: Array<String>) {
     val shaperConfig = ShaperConfig.read()
     val templatesRepository = TemplatesRepository(shaperConfig)
     val config = templatesRepository.getTemplateConfig(input)
-    val shaper = Shaper(templateConfig = config)
+    val configOverrider = ConfigOverrider()
+
+    val overridenConfig = config.copy(
+        globalParams = configOverrider.override(config.globalParams)
+    )
+
+    val shaper = Shaper(templateConfig = overridenConfig)
     val consoleResult = shaper.execute(output)
     println(consoleResult)
 }

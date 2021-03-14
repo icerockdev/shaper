@@ -1,18 +1,24 @@
 globalParams:
   packageName: dev.icerock.shaper.sample.kmm.auth
   moduleName: Auth
+  androidMainDeps:
+    - lifecycle
+    - recyclerView
+  commonMainDeps:
+    - mokoMvvm
+    - mokoResources
+    - napier
+  config:
+    val: test
+    var: 1
+    opt:
+      first: 1.1
+      second: two
+      third: false
 
 files:
   - pathTemplate: 'build.gradle.kts'
     contentTemplateName: kmm-module/build.gradle.kts.hbs
-    templateParams:
-      androidMainDeps:
-        - lifecycle
-        - recyclerView
-      commonMainDeps:
-        - mokoMvvm
-        - mokoResources
-        - napier
   - pathTemplate: 'src/commonMain/kotlin/{{dts packageName}}/di/{{moduleName}}Factory.kt'
     contentTemplateName: kmm-module/Factory.kt.hbs
   - pathTemplate: 'src/androidMain/AndroidManifest.xml'
