@@ -10,13 +10,13 @@ class TemplatesRepository(
     private val shaperConfig: ShaperConfig?
 ) {
     fun getTemplateConfig(templateName: String): TemplateConfig {
-        val templateConfigFile = shaperConfig?.templateRepositories
-            .orEmpty()
-            .map { File(it, templateName) }
-            .firstOrNull { it.exists() } ?: File(templateName)
-
+        var templateConfigFile: File = File(templateName)
         if (templateConfigFile.exists().not()) {
-            throw IllegalArgumentException("configuration $templateName not found")
+            templateConfigFile = shaperConfig?.templateRepositories
+                .orEmpty()
+                .map { File(it, templateName) }
+                .firstOrNull { it.exists() }
+                ?: throw IllegalArgumentException("configuration $templateName not found")
         }
 
         return YamlConfigReader.read(templateConfigFile)
