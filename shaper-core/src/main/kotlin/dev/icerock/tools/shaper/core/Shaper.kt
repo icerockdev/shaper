@@ -4,8 +4,6 @@
 
 package dev.icerock.tools.shaper.core
 
-import com.github.jknack.handlebars.Handlebars
-import com.github.jknack.handlebars.Helper
 import com.github.jknack.handlebars.io.TemplateSource
 import com.github.jknack.handlebars.io.URLTemplateSource
 import java.io.File
@@ -15,28 +13,7 @@ import java.io.StringWriter
 class Shaper(private val config: Config) {
 
     fun execute(outputPath: String): String {
-        val handlebars = Handlebars()
-        handlebars.registerHelper("dts", Helper<String> { context, _ ->
-            context.replace('.', '/')
-        })
-        handlebars.registerHelper("lcs", Helper<String> { context, _ ->
-            context.toLowerCase()
-        })
-        handlebars.registerHelper("cap", Helper<String> { context, _ ->
-            context.capitalize()
-        })
-        handlebars.registerHelper("ucs", Helper<String> { context, _ ->
-            context.toUpperCase()
-        })
-        handlebars.registerHelper("cts", Helper<String> { context, _ ->
-            context.camelToSnakeCase()
-        })
-        handlebars.registerHelper("stl", Helper<String> { context, _ ->
-            context.snakeToLowerCamelCase()
-        })
-        handlebars.registerHelper("stu", Helper<String> { context, _ ->
-            context.snakeToUpperCamelCase()
-        })
+        val handlebars = HandlebarsFactory.create()
 
         config.files.forEach { fileConfig ->
             val allParams = config.globalParams + fileConfig.templateParams
@@ -56,14 +33,14 @@ class Shaper(private val config: Config) {
             }
         }
         val resultWriter = StringWriter()
-        config.outputs.forEach() { outputConfig ->
+        config.outputs.forEach { outputConfig ->
             resultWriter.write(outputConfig.outputTitle)
             resultWriter.appendLine()
             val allParams = config.globalParams + outputConfig.templateParams
             val templateSource = getTemplateSource(outputConfig.contentTemplateName)
             val contentTemplate = handlebars.compile(templateSource)
 
-            contentTemplate.apply(allParams,resultWriter)
+            contentTemplate.apply(allParams, resultWriter)
             resultWriter.appendLine()
         }
         return resultWriter.toString()
