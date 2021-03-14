@@ -12,8 +12,9 @@ globalParams:
     val: test
     var: 1
     opt:
-      first: 1
+      first: 1.1
       second: two
+      third: false
 
 files:
   - pathTemplate: 'build.gradle.kts'

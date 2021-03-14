@@ -21,18 +21,36 @@ class ConfigOverrider {
             is String -> overrideString(path, value)
             is List<*> -> overrideList(path, value)
             is Map<*, *> -> overrideMap(map = value as Map<String, Any>, path = path)
-            // TODO support int, double, boolean overriding
+            is Int -> overrideInt(path, value)
+            is Double -> overrideDouble(path, value)
+            is Boolean -> overrideBoolean(path, value)
             else -> value
         }
     }
 
     private fun overrideString(path: String, value: String): String {
+        return overridePrimitive(path, value) { it }
+    }
+
+    private fun overrideBoolean(path: String, value: Boolean): Boolean {
+        return overridePrimitive(path, value) { it == "true" }
+    }
+
+    private fun overrideInt(path: String, value: Int): Int {
+        return overridePrimitive(path, value) { it.toInt() }
+    }
+
+    private fun overrideDouble(path: String, value: Double): Double {
+        return overridePrimitive(path, value) { it.toDouble() }
+    }
+
+    private fun <T> overridePrimitive(path: String, value: T, mapper: (String) -> T): T {
         println("Input $path value")
         println("Default: $value (Press enter to skip change)")
         val input = readLine() ?: return value
-        val overridenValue = input.ifBlank { value }
-        println("$path = $overridenValue")
-        return overridenValue
+        val newValue = if (input.isBlank()) value else mapper(input)
+        println("$path = $newValue")
+        return newValue
     }
 
     // TODO maybe give user option to write own list?
