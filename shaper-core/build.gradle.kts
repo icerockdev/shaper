@@ -5,5 +5,5 @@
 dependencies {
     implementation("com.github.jknack:handlebars:4.2.0")
 
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:1.4.30")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:1.4.31")
 }
