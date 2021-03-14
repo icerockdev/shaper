@@ -53,7 +53,7 @@ class ConfigOverrider {
         return newValue
     }
 
-    // TODO maybe give user option to write own list?
+    // TODO #11 maybe give user option to write own list?
     private fun overrideList(path: String, value: List<*>): List<*> {
         return value.mapIndexed { index, item ->
             overrideValue("$path:$index", item as Any)
