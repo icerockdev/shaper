@@ -3,6 +3,9 @@
 Kotlin library and command line tool for generation of directory with files from template (on
 Handlebars) and configuration.
 
+# Install
+`/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/icerockdev/shaper/master/install-shaper.sh)"`
+
 # Usage
 
 ## Core
