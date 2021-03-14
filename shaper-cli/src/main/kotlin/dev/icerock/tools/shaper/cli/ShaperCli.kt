@@ -5,9 +5,11 @@
 package dev.icerock.tools.shaper.cli
 
 import dev.icerock.tools.shaper.core.Shaper
+import dev.icerock.tools.shaper.core.YamlConfigReader
 import kotlinx.cli.ArgParser
 import kotlinx.cli.ArgType
 import kotlinx.cli.default
+import java.io.File
 
 fun main(args: Array<String>) {
     val parser = ArgParser("shaper")
@@ -26,9 +28,13 @@ fun main(args: Array<String>) {
 
     parser.parse(args)
 
-    val config: Configuration = Configuration.read(input)
+    val file = File(input)
+    if (file.exists().not()) {
+        throw IllegalArgumentException("input configuration file not exist at path $input")
+    }
 
-    val shaper = Shaper(config = config.buildShaperConfig())
+    val config = YamlConfigReader.read(file)
+    val shaper = Shaper(config = config)
     val consoleResult = shaper.execute(output)
     println(consoleResult)
 }

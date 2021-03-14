@@ -8,7 +8,6 @@ plugins {
 
 dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-cli:0.3.1")
-    implementation("org.yaml:snakeyaml:1.21")
     implementation(project(":shaper-core"))
 }
 
