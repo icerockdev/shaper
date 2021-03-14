@@ -4,7 +4,7 @@
 
 package dev.icerock.tools.shaper.core
 
-data class Config(
+data class TemplateConfig(
     val globalParams: Map<String, Any>,
     val files: List<FileConfig>,
     val outputs: List<OutputConfig>

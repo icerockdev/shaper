@@ -5,6 +5,8 @@
 package dev.icerock.tools.shaper.cli
 
 import dev.icerock.tools.shaper.core.Shaper
+import dev.icerock.tools.shaper.core.ShaperConfig
+import dev.icerock.tools.shaper.core.TemplatesRepository
 import dev.icerock.tools.shaper.core.YamlConfigReader
 import kotlinx.cli.ArgParser
 import kotlinx.cli.ArgType
@@ -33,8 +35,10 @@ fun main(args: Array<String>) {
         throw IllegalArgumentException("input configuration file not exist at path $input")
     }
 
-    val config = YamlConfigReader.read(file)
-    val shaper = Shaper(config = config)
+    val shaperConfig = ShaperConfig.read()
+    val templatesRepository = TemplatesRepository(shaperConfig)
+    val config = templatesRepository.getTemplateConfig(input)
+    val shaper = Shaper(templateConfig = config)
     val consoleResult = shaper.execute(output)
     println(consoleResult)
 }

@@ -9,9 +9,10 @@ import java.io.File
 
 object YamlConfigReader {
 
-    fun read(file: File): Config {
-        val map = readYaml(file)
-        return buildConfig(map = map, directory = file.parentFile)
+    fun read(file: File): TemplateConfig {
+        val absoluteFile = file.absoluteFile
+        val map = readYaml(absoluteFile)
+        return buildConfig(map = map, directory = absoluteFile.parentFile)
     }
 
     private fun readYaml(file: File): Map<String, Any> {
@@ -21,17 +22,17 @@ object YamlConfigReader {
         } ?: throw IllegalArgumentException("configuration is empty at $file")
     }
 
-    private fun buildConfig(map: Map<String, Any>, directory: File): Config {
+    private fun buildConfig(map: Map<String, Any>, directory: File): TemplateConfig {
         val globalParams = map["globalParams"] as? Map<String, Any>
         val files = map["files"]
 
         val filesList = files as? List<Map<String, Any>>
         val filesDirectory = files as? String
 
-        val filesConfigs: List<Config.FileConfig> = if (filesList != null) {
+        val filesConfigs: List<TemplateConfig.FileConfig> = if (filesList != null) {
             filesList.map { fileMap ->
                 val templateFile = File(directory, fileMap["contentTemplateName"] as String)
-                Config.FileConfig(
+                TemplateConfig.FileConfig(
                     pathTemplate = fileMap["pathTemplate"] as String,
                     contentTemplateName = templateFile.path,
                     templateParams = (fileMap["templateParams"] as? Map<String, Any>).orEmpty()
@@ -42,7 +43,7 @@ object YamlConfigReader {
             val rootPrefix = filesDir.path + "/"
 
             filesDir.walkTopDown().filterNot { it.isDirectory }.map {
-                Config.FileConfig(
+                TemplateConfig.FileConfig(
                     pathTemplate = it.path.removeSuffix(".hbs").removePrefix(rootPrefix),
                     contentTemplateName = it.path,
                     templateParams = emptyMap()
@@ -51,16 +52,16 @@ object YamlConfigReader {
         } else emptyList()
 
         val outputs = map["outputs"] as? List<Map<String, Any>>
-        val outputsConfigs: List<Config.OutputConfig> = outputs?.map { fileMap ->
+        val outputsConfigs: List<TemplateConfig.OutputConfig> = outputs?.map { fileMap ->
             val templateFile = File(directory, fileMap["contentTemplateName"] as String)
-            Config.OutputConfig(
+            TemplateConfig.OutputConfig(
                 outputTitle = fileMap["title"] as String,
                 contentTemplateName = templateFile.path,
                 templateParams = (fileMap["templateParams"] as? Map<String, Any>).orEmpty()
             )
         }.orEmpty()
 
-        return Config(
+        return TemplateConfig(
             globalParams = globalParams.orEmpty(),
             files = filesConfigs.orEmpty(),
             outputs = outputsConfigs

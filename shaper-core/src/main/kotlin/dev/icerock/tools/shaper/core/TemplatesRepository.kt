@@ -4,18 +4,21 @@
 
 package dev.icerock.tools.shaper.core
 
-import com.github.jknack.handlebars.io.TemplateSource
-import com.github.jknack.handlebars.io.URLTemplateSource
 import java.io.File
 
-class TemplatesRepository {
+class TemplatesRepository(
+    private val shaperConfig: ShaperConfig?
+) {
+    fun getTemplateConfig(templateName: String): TemplateConfig {
+        val templateConfigFile = shaperConfig?.templateRepositories
+            .orEmpty()
+            .map { File(it, templateName) }
+            .firstOrNull { it.exists() } ?: File(templateName)
 
-    fun getTemplateSource(templateName: String): TemplateSource {
-        val templateFile = File(templateName)
-        return if (templateFile.exists()) {
-            FileTemplateSource(templateFile)
-        } else {
-            URLTemplateSource(templateName, this::class.java.classLoader.getResource(templateName))
+        if (templateConfigFile.exists().not()) {
+            throw IllegalArgumentException("configuration $templateName not found")
         }
+
+        return YamlConfigReader.read(templateConfigFile)
     }
 }

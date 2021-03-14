@@ -8,14 +8,13 @@ import java.io.File
 import java.io.FileWriter
 import java.io.StringWriter
 
-class Shaper(private val config: Config) {
+class Shaper(private val templateConfig: TemplateConfig) {
 
     fun execute(outputPath: String): String {
         val handlebars = HandlebarsFactory.create()
-        val templatesRepository = TemplatesRepository()
 
-        config.files.forEach { fileConfig ->
-            val allParams = config.globalParams + fileConfig.templateParams
+        templateConfig.files.forEach { fileConfig ->
+            val allParams = templateConfig.globalParams + fileConfig.templateParams
 
             val fileNameTemplate = handlebars.compileInline(fileConfig.pathTemplate)
             val filePath = fileNameTemplate.apply(allParams)
@@ -25,22 +24,18 @@ class Shaper(private val config: Config) {
                 if (!exists()) mkdirs()
             }
 
-            val templateSource = templatesRepository.getTemplateSource(
-                fileConfig.contentTemplateName
-            )
+            val templateSource = TemplateSourceFactory.create(fileConfig.contentTemplateName)
             val contentTemplate = handlebars.compile(templateSource)
             FileWriter(file).use { fileWriter ->
                 contentTemplate.apply(allParams, fileWriter)
             }
         }
         val resultWriter = StringWriter()
-        config.outputs.forEach { outputConfig ->
+        templateConfig.outputs.forEach { outputConfig ->
             resultWriter.write(outputConfig.outputTitle)
             resultWriter.appendLine()
-            val allParams = config.globalParams + outputConfig.templateParams
-            val templateSource = templatesRepository.getTemplateSource(
-                outputConfig.contentTemplateName
-            )
+            val allParams = templateConfig.globalParams + outputConfig.templateParams
+            val templateSource = TemplateSourceFactory.create(outputConfig.contentTemplateName)
             val contentTemplate = handlebars.compile(templateSource)
 
             contentTemplate.apply(allParams, resultWriter)
