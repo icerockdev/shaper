@@ -30,11 +30,6 @@ fun main(args: Array<String>) {
 
     parser.parse(args)
 
-    val file = File(input)
-    if (file.exists().not()) {
-        throw IllegalArgumentException("input configuration file not exist at path $input")
-    }
-
     val shaperConfig = ShaperConfig.read()
     val templatesRepository = TemplatesRepository(shaperConfig)
     val config = templatesRepository.getTemplateConfig(input)

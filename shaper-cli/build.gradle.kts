@@ -11,14 +11,11 @@ dependencies {
     implementation(project(":shaper-core"))
 }
 
+application {
+    mainClass.set("dev.icerock.tools.shaper.cli.ShaperCliKt")
+}
+
 tasks.withType<org.gradle.jvm.tasks.Jar>().configureEach {
-    manifest {
-        attributes(
-            mapOf(
-                "Main-Class" to "dev.icerock.tools.shaper.cli.ShaperCliKt"
-            )
-        )
-    }
     dependsOn(configurations.runtimeClasspath)
     from({
         configurations.runtimeClasspath.get()

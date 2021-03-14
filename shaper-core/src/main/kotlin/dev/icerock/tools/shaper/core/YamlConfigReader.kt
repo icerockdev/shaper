@@ -39,7 +39,7 @@ object YamlConfigReader {
                 )
             }
         } else if (filesDirectory != null) {
-            val filesDir = File(filesDirectory)
+            val filesDir = File(directory, filesDirectory)
             val rootPrefix = filesDir.path + "/"
 
             filesDir.walkTopDown().filterNot { it.isDirectory }.map {
