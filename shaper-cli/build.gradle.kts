@@ -15,15 +15,6 @@ application {
     mainClass.set("dev.icerock.tools.shaper.cli.ShaperCliKt")
 }
 
-tasks.withType<org.gradle.jvm.tasks.Jar>().configureEach {
-    dependsOn(configurations.runtimeClasspath)
-    from({
-        configurations.runtimeClasspath.get()
-            .filter { it.name.endsWith("jar") }
-            .map { zipTree(it) }
-    })
-}
-
 // export PATH=~/.shaper/shaper-cli/bin:$PATH
 tasks.create("install") {
     dependsOn(tasks.getByName("installDist"))
