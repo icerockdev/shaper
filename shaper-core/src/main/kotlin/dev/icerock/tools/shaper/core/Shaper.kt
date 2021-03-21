@@ -24,10 +24,15 @@ class Shaper(private val templateConfig: TemplateConfig) {
                 if (!exists()) mkdirs()
             }
 
-            val templateSource = TemplateSourceFactory.create(fileConfig.contentTemplateName)
-            val contentTemplate = handlebars.compile(templateSource)
-            FileWriter(file).use { fileWriter ->
-                contentTemplate.apply(allParams, fileWriter)
+            if (fileConfig.contentTemplateName.endsWith(".hbs")) {
+                val templateSource = TemplateSourceFactory.create(fileConfig.contentTemplateName)
+                val contentTemplate = handlebars.compile(templateSource)
+                FileWriter(file).use { fileWriter ->
+                    contentTemplate.apply(allParams, fileWriter)
+                }
+            } else {
+                val source = File(fileConfig.contentTemplateName)
+                source.copyTo(file, overwrite = true)
             }
         }
         val resultWriter = StringWriter()
