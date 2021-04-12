@@ -31,6 +31,9 @@ object HandlebarsFactory {
         handlebars.registerHelper("stu", Helper<String> { context, _ ->
             context.snakeToUpperCamelCase()
         })
+        handlebars.registerHelper("eq", Helper<String> { context, options ->
+            context == options.params[0]
+        })
         return handlebars
     }
 }
