@@ -50,8 +50,7 @@ object HandlebarsFactory {
         partialDir.listFiles()?.forEach {
             if (it.isDirectory) {
                 registerPartials(File(it.absoluteFile.toString()), handlebars, includePath)
-            }
-            if (!it.isDirectory) {
+            } else {
                 handlebars.compile(
                     it.absoluteFile.toString().substringBeforeLast(".").substringAfterLast("$includePath/")
                 )
