@@ -106,6 +106,22 @@ class Test {
 }
 ```
 
+## Partials
+
+For use partials you can put your `.hbs` files in `_includes` directory (multi-nesting support). 
+
+`_includes/partials/type.hbs`
+```handlebars
+{{~#if (eq this.type "integer")}}Int{{else}}{{stu this.type}}{{/if}}{{#if nullableOnly}}?{{else}}{{#if this.nullable}}?{{/if~}}{{/if~}}
+```
+
+And use the partials in templates: 
+```handlebars
+{{~#each columns}}
+    val {{this.name}}: {{> partials/type this  nullableOnly=true}} = obj.{{this.name~}}
+{{~/each}}
+```
+
 ## License
 
     Copyright 2021 IceRock MAG Inc
