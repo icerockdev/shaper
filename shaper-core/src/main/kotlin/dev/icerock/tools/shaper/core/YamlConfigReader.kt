@@ -25,34 +25,31 @@ object YamlConfigReader {
     private fun buildConfig(map: Map<String, Any>, directory: File): TemplateConfig {
         val globalParams = map["globalParams"] as? Map<String, Any>
         val files = map["files"]
+        val includes = map["includes"]
 
-        val filesList = files as? List<Map<String, Any>>
-        val filesDirectory = files as? String
+        val filesConfigs: List<TemplateConfig.FileConfig> = collectFileConfig(files, directory)
+        val outputsConfigs: List<TemplateConfig.OutputConfig> = collectOutputConfig(
+            map["outputs"] as? List<Map<String, Any>>,
+            directory
+        )
+        val includesConfigs = collectIncludeConfig(includes as List<String>, directory)
 
-        val filesConfigs: List<TemplateConfig.FileConfig> = if (filesList != null) {
-            filesList.map { fileMap ->
-                val templateFile = File(directory, fileMap["contentTemplateName"] as String)
-                TemplateConfig.FileConfig(
-                    pathTemplate = fileMap["pathTemplate"] as String,
-                    contentTemplateName = templateFile.path,
-                    templateParams = (fileMap["templateParams"] as? Map<String, Any>).orEmpty()
-                )
-            }
-        } else if (filesDirectory != null) {
-            val filesDir = File(directory, filesDirectory)
-            val rootPrefix = filesDir.path + "/"
+        return TemplateConfig(
+            globalParams = globalParams.orEmpty(),
+            files = filesConfigs,
+            includes = includesConfigs,
+            outputs = outputsConfigs
+        )
+    }
 
-            filesDir.walkTopDown().filterNot { it.isDirectory }.map {
-                TemplateConfig.FileConfig(
-                    pathTemplate = it.path.removeSuffix(".hbs").removePrefix(rootPrefix),
-                    contentTemplateName = it.path,
-                    templateParams = emptyMap()
-                )
-            }.toList()
-        } else emptyList()
+    private fun collectIncludeConfig(includes: List<String>?, directory: File) =
+        includes?.map { File(directory, it).absolutePath }.orEmpty()
 
-        val outputs = map["outputs"] as? List<Map<String, Any>>
-        val outputsConfigs: List<TemplateConfig.OutputConfig> = outputs?.map { fileMap ->
+    private fun collectOutputConfig(
+        outputs: List<Map<String, Any>>?,
+        directory: File
+    ): List<TemplateConfig.OutputConfig> {
+        return outputs?.map { fileMap ->
             val templateFile = File(directory, fileMap["contentTemplateName"] as String)
             TemplateConfig.OutputConfig(
                 outputTitle = fileMap["title"] as String,
@@ -60,11 +57,30 @@ object YamlConfigReader {
                 templateParams = (fileMap["templateParams"] as? Map<String, Any>).orEmpty()
             )
         }.orEmpty()
+    }
 
-        return TemplateConfig(
-            globalParams = globalParams.orEmpty(),
-            files = filesConfigs.orEmpty(),
-            outputs = outputsConfigs
-        )
+    private fun collectFileConfig(files: Any?, directory: File): List<TemplateConfig.FileConfig> {
+        val filesList = files as? List<Map<String, Any>>
+        val filesDirectory = files as? String
+        return filesList?.map { fileMap ->
+            val templateFile = File(directory, fileMap["contentTemplateName"] as String)
+            TemplateConfig.FileConfig(
+                pathTemplate = fileMap["pathTemplate"] as String,
+                contentTemplateName = templateFile.path,
+                templateParams = (fileMap["templateParams"] as? Map<String, Any>).orEmpty()
+            )
+        }
+            ?: if (filesDirectory != null) {
+                val filesDir = File(directory, filesDirectory)
+                val rootPrefix = filesDir.path + "/"
+
+                filesDir.walkTopDown().filterNot { it.isDirectory }.map {
+                    TemplateConfig.FileConfig(
+                        pathTemplate = it.path.removeSuffix(".hbs").removePrefix(rootPrefix),
+                        contentTemplateName = it.path,
+                        templateParams = emptyMap()
+                    )
+                }.toList()
+            } else emptyList()
     }
 }

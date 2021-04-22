@@ -6,15 +6,11 @@ package dev.icerock.tools.shaper.core
 
 import com.github.jknack.handlebars.Handlebars
 import com.github.jknack.handlebars.Helper
-import com.github.jknack.handlebars.io.FileTemplateLoader
-import java.io.File
-import java.nio.file.Paths
+import com.github.jknack.handlebars.cache.ConcurrentMapTemplateCache
 
 object HandlebarsFactory {
-    fun create(includePath: String = "_includes"): Handlebars {
-        val partialDir = File("${Paths.get("").toAbsolutePath()}/$includePath")
-        partialDir.mkdirs()
-        val handlebars = Handlebars(FileTemplateLoader(partialDir, ".hbs"))
+    fun create(): Handlebars {
+        val handlebars = Handlebars().with(ConcurrentMapTemplateCache())
 
         handlebars.registerHelper("dts", Helper<String> { context, _ ->
             context.replace('.', '/')
@@ -41,20 +37,6 @@ object HandlebarsFactory {
             context == options.params[0]
         })
 
-        registerPartials(partialDir, handlebars, includePath)
-
         return handlebars
-    }
-
-    private fun registerPartials(partialDir: File, handlebars: Handlebars, includePath: String) {
-        partialDir.listFiles()?.forEach {
-            if (it.isDirectory) {
-                registerPartials(File(it.absoluteFile.toString()), handlebars, includePath)
-            } else {
-                handlebars.compile(
-                    it.absoluteFile.toString().substringBeforeLast(".").substringAfterLast("$includePath/")
-                )
-            }
-        }
     }
 }

@@ -1,0 +1,14 @@
+globalParams:
+  packageName: dev.icerock.shaper.sample.kmm.auth
+  moduleName: Auth
+  androidMainDeps:
+    - lifecycle
+    - recyclerView
+
+files: files/
+outputs:
+  - title: '=== Tips for feature setup ==='
+    contentTemplateName: kmm-module/console.output.hbs
+includes:
+  - includes
+  - not-includes/sub-includes

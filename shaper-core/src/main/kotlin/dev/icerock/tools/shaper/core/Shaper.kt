@@ -4,6 +4,9 @@
 
 package dev.icerock.tools.shaper.core
 
+import com.github.jknack.handlebars.io.ClassPathTemplateLoader
+import com.github.jknack.handlebars.io.FileTemplateLoader
+import com.github.jknack.handlebars.io.URLTemplateLoader
 import java.io.File
 import java.io.FileWriter
 import java.io.StringWriter
@@ -12,6 +15,15 @@ class Shaper(private val templateConfig: TemplateConfig) {
 
     fun execute(outputPath: String): String {
         val handlebars = HandlebarsFactory.create()
+
+        val list = mutableListOf<URLTemplateLoader>(ClassPathTemplateLoader())
+        templateConfig.includes.forEach { includeDir ->
+            File(includeDir).walkTopDown().filter { it.isDirectory }.forEach {
+                list.add(FileTemplateLoader(it.absolutePath, ".hbs"))
+            }
+        }
+
+        handlebars.with(*list.toTypedArray())
 
         templateConfig.files.forEach { fileConfig ->
             val allParams = templateConfig.globalParams + fileConfig.templateParams
