@@ -25,7 +25,7 @@ class ShaperTest {
         val config = TemplateConfig(
             globalParams = mapOf("packageName" to "dev.icerock"),
             files = listOf(buildGradleFile, sourceCodeFile),
-            includes = listOf("src/test/resources/includes", "src/test/resources/second-includes"),
+            includes = listOf("includes", "second-includes"),
             outputs = emptyList()
         )
         val shaper = Shaper(templateConfig = config)
