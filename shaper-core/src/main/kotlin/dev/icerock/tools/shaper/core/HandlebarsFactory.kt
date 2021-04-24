@@ -6,10 +6,12 @@ package dev.icerock.tools.shaper.core
 
 import com.github.jknack.handlebars.Handlebars
 import com.github.jknack.handlebars.Helper
+import com.github.jknack.handlebars.cache.ConcurrentMapTemplateCache
 
 object HandlebarsFactory {
     fun create(): Handlebars {
-        val handlebars = Handlebars()
+        val handlebars = Handlebars().with(ConcurrentMapTemplateCache())
+
         handlebars.registerHelper("dts", Helper<String> { context, _ ->
             context.replace('.', '/')
         })
@@ -34,6 +36,7 @@ object HandlebarsFactory {
         handlebars.registerHelper("eq", Helper<String> { context, options ->
             context == options.params[0]
         })
+
         return handlebars
     }
 }

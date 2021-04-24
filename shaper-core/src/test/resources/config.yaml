@@ -1,0 +1,17 @@
+globalParams:
+  packageName: dev.icerock.shaper.sample.kmm.auth
+  moduleName: Auth
+  androidMainDeps:
+    - lifecycle
+    - recyclerView
+
+files:
+  - pathTemplate: 'build.gradle.kts'
+    contentTemplateName: kmm-module/build.gradle.kts.hbs
+  - pathTemplate: 'src/commonMain/kotlin/{{dts packageName}}/di/{{moduleName}}Factory.kt'
+    contentTemplateName: kmm-module/Factory.kt.hbs
+outputs:
+  - title: '=== Tips for feature setup ==='
+    contentTemplateName: kmm-module/console.output.hbs
+includes:
+  - includes
