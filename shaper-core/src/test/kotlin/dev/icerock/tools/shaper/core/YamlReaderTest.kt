@@ -15,7 +15,7 @@ class YamlReaderTest {
     fun `read yaml with files`() {
         val result = YamlConfigReader.read(File("src/test/resources/config.yaml"))
         val array = result.globalParams["androidMainDeps"] as ArrayList<String>
-        val files = result.files
+        val files = result.files.sortedBy { it.pathTemplate }
         val includes = result.includes
         val outputs = result.outputs
 
@@ -51,7 +51,7 @@ class YamlReaderTest {
     fun `read yaml with one directory`() {
         val result = YamlConfigReader.read(File("src/test/resources/configWithoutFiles.yaml"))
         val array = result.globalParams["androidMainDeps"] as ArrayList<String>
-        val files = result.files
+        val files = result.files.sortedBy { it.pathTemplate }
         val includes = result.includes
         val outputs = result.outputs
 
@@ -59,16 +59,16 @@ class YamlReaderTest {
         assertEquals("Auth", result.globalParams["moduleName"])
         assertEquals("lifecycle", array[0])
         assertEquals("recyclerView", array[1])
-        assertEquals("yaml-test1", files[0].pathTemplate)
+        assertEquals("1yaml-test", files[0].pathTemplate)
         assertThat(
             files[0].contentTemplateName,
-            containsString("shaper/shaper-core/src/test/resources/files/yaml-test1.hbs")
+            containsString("shaper/shaper-core/src/test/resources/files/1yaml-test.hbs")
         )
         assertEquals(0, files[0].templateParams.count())
-        assertEquals("yaml-test2", files[1].pathTemplate)
+        assertEquals("2yaml-test", files[1].pathTemplate)
         assertThat(
             files[1].contentTemplateName,
-            containsString("shaper/shaper-core/src/test/resources/files/yaml-test2.hbs")
+            containsString("shaper/shaper-core/src/test/resources/files/2yaml-test.hbs")
         )
         assertEquals(0, files[1].templateParams.count())
         assertThat(
