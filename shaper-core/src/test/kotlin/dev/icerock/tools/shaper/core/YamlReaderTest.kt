@@ -4,6 +4,8 @@
 
 package dev.icerock.tools.shaper.core
 
+import org.hamcrest.CoreMatchers.containsString
+import org.junit.Assert.assertThat
 import java.io.File
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -22,22 +24,25 @@ class YamlReaderTest {
         assertEquals("lifecycle", array[0])
         assertEquals("recyclerView", array[1])
         assertEquals("build.gradle.kts", files[0].pathTemplate)
-        assertEquals(
-            "/Users/mac2/proj/shaper/shaper-core/src/test/resources/kmm-module/build.gradle.kts.hbs",
-            files[0].contentTemplateName
+        assertThat(
+            files[0].contentTemplateName,
+            containsString("shaper/shaper-core/src/test/resources/kmm-module/build.gradle.kts.hbs")
         )
         assertEquals(0, files[0].templateParams.count())
         assertEquals("src/commonMain/kotlin/{{dts packageName}}/di/{{moduleName}}Factory.kt", files[1].pathTemplate)
-        assertEquals(
-            "/Users/mac2/proj/shaper/shaper-core/src/test/resources/kmm-module/Factory.kt.hbs",
-            files[1].contentTemplateName
+        assertThat(
+            files[1].contentTemplateName,
+            containsString("shaper/shaper-core/src/test/resources/kmm-module/Factory.kt.hbs")
         )
         assertEquals(0, files[1].templateParams.count())
-        assertEquals("/Users/mac2/proj/shaper/shaper-core/src/test/resources/includes", includes[0])
+        assertThat(
+            includes[0],
+            containsString("shaper/shaper-core/src/test/resources/includes")
+        )
         assertEquals("=== Tips for feature setup ===", outputs[0].outputTitle)
-        assertEquals(
-            "/Users/mac2/proj/shaper/shaper-core/src/test/resources/kmm-module/console.output.hbs",
-            outputs[0].contentTemplateName
+        assertThat(
+            outputs[0].contentTemplateName,
+            containsString("shaper/shaper-core/src/test/resources/kmm-module/console.output.hbs")
         )
         assertEquals(0, outputs[0].templateParams.count())
     }
@@ -55,23 +60,29 @@ class YamlReaderTest {
         assertEquals("lifecycle", array[0])
         assertEquals("recyclerView", array[1])
         assertEquals("yaml-test1", files[0].pathTemplate)
-        assertEquals(
-            "/Users/mac2/proj/shaper/shaper-core/src/test/resources/files/yaml-test1.hbs",
-            files[0].contentTemplateName
+        assertThat(
+            files[0].contentTemplateName,
+            containsString("shaper/shaper-core/src/test/resources/files/yaml-test1.hbs")
         )
         assertEquals(0, files[0].templateParams.count())
         assertEquals("yaml-test2", files[1].pathTemplate)
-        assertEquals(
-            "/Users/mac2/proj/shaper/shaper-core/src/test/resources/files/yaml-test2.hbs",
-            files[1].contentTemplateName
+        assertThat(
+            files[1].contentTemplateName,
+            containsString("shaper/shaper-core/src/test/resources/files/yaml-test2.hbs")
         )
         assertEquals(0, files[1].templateParams.count())
-        assertEquals("/Users/mac2/proj/shaper/shaper-core/src/test/resources/includes", includes[0])
-        assertEquals("/Users/mac2/proj/shaper/shaper-core/src/test/resources/not-includes/sub-includes", includes[1])
+        assertThat(
+            includes[0],
+            containsString("shaper/shaper-core/src/test/resources/includes")
+        )
+        assertThat(
+            includes[1],
+            containsString("shaper/shaper-core/src/test/resources/not-includes/sub-includes")
+        )
         assertEquals("=== Tips for feature setup ===", outputs[0].outputTitle)
-        assertEquals(
-            "/Users/mac2/proj/shaper/shaper-core/src/test/resources/kmm-module/console.output.hbs",
-            outputs[0].contentTemplateName
+        assertThat(
+            outputs[0].contentTemplateName,
+            containsString("shaper/shaper-core/src/test/resources/kmm-module/console.output.hbs")
         )
         assertEquals(0, outputs[0].templateParams.count())
     }
