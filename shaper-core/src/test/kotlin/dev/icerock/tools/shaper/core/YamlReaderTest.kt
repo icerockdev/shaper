@@ -55,14 +55,11 @@ class YamlReaderTest {
         val includes = result.includes
         val outputs = result.outputs
 
-        println(files[0])
-        println(files[1])
-
         assertEquals("dev.icerock.shaper.sample.kmm.auth", result.globalParams["packageName"])
         assertEquals("Auth", result.globalParams["moduleName"])
         assertEquals("lifecycle", array[0])
         assertEquals("recyclerView", array[1])
-        assertEquals("yaml-test1", files[0].pathTemplate)
+        assertEquals("yaml-test1", files[1].pathTemplate)
         assertThat(
             files[0].contentTemplateName,
             containsString("shaper/shaper-core/src/test/resources/files/yaml-test1.hbs")
