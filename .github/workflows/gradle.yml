@@ -24,3 +24,9 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew build
+    - name: Publish Test Report
+      uses: mikepenz/action-junit-report@v2
+      if: ${{ always() }}
+      with:
+        report_paths: '**/build/test-results/test/TEST-*.xml'
+        github_token: ${{ secrets.GITHUB_TOKEN }}
