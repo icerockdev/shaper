@@ -55,6 +55,9 @@ class YamlReaderTest {
         val includes = result.includes
         val outputs = result.outputs
 
+        println(files[0])
+        println(files[1])
+
         assertEquals("dev.icerock.shaper.sample.kmm.auth", result.globalParams["packageName"])
         assertEquals("Auth", result.globalParams["moduleName"])
         assertEquals("lifecycle", array[0])
