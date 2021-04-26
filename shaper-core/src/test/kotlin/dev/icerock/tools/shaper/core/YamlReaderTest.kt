@@ -15,7 +15,7 @@ class YamlReaderTest {
     fun `read yaml with files`() {
         val result = YamlConfigReader.read(File("src/test/resources/config.yaml"))
         val array = result.globalParams["androidMainDeps"] as ArrayList<String>
-        val files = result.files
+        val files = result.files.sortedBy { it.pathTemplate }
         val includes = result.includes
         val outputs = result.outputs
 
@@ -70,7 +70,7 @@ class YamlReaderTest {
             files[1].contentTemplateName,
             containsString("shaper/shaper-core/src/test/resources/files/2yaml-test.hbs")
         )
-        assertEquals(0, files[0].templateParams.count())
+        assertEquals(0, files[1].templateParams.count())
         assertThat(
             includes[0],
             containsString("shaper/shaper-core/src/test/resources/includes")
