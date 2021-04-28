@@ -32,7 +32,7 @@ object YamlConfigReader {
             map["outputs"] as? List<Map<String, Any>>,
             directory
         )
-        val includesConfigs = collectIncludeConfig(includes as List<String>, directory)
+        val includesConfigs = collectIncludeConfig(includes as List<String>?, directory)
 
         return TemplateConfig(
             globalParams = globalParams.orEmpty(),
@@ -69,18 +69,15 @@ object YamlConfigReader {
                 contentTemplateName = templateFile.path,
                 templateParams = (fileMap["templateParams"] as? Map<String, Any>).orEmpty()
             )
-        }
-            ?: if (filesDirectory != null) {
-                val filesDir = File(directory, filesDirectory)
-                val rootPrefix = filesDir.path + "/"
-
-                filesDir.walkTopDown().filterNot { it.isDirectory }.map {
-                    TemplateConfig.FileConfig(
-                        pathTemplate = it.path.removeSuffix(".hbs").removePrefix(rootPrefix),
-                        contentTemplateName = it.path,
-                        templateParams = emptyMap()
-                    )
-                }.toList()
-            } else emptyList()
+        } ?: if (filesDirectory != null) {
+            val filesDir = File(directory, filesDirectory)
+            filesDir.walkTopDown().filterNot { it.isDirectory }.map {
+                TemplateConfig.FileConfig(
+                    pathTemplate = it.relativeTo(filesDir).path.removeSuffix(".hbs"),
+                    contentTemplateName = it.path,
+                    templateParams = emptyMap()
+                )
+            }.toList()
+        } else emptyList()
     }
 }
