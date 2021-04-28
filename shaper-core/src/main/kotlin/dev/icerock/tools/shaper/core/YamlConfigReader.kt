@@ -63,10 +63,11 @@ object YamlConfigReader {
         val filesList = files as? List<Map<String, Any>>
         val filesDirectory = files as? String
         return filesList?.map { fileMap ->
-            PathLocator.set(fileMap["contentTemplateName"] as String, directory.absolutePath)
+            val contentTemplateName = fileMap["contentTemplateName"] as String
+            PathLocator.set(contentTemplateName, directory.absolutePath)
             TemplateConfig.FileConfig(
                 pathTemplate = fileMap["pathTemplate"] as String,
-                contentTemplateName = fileMap["contentTemplateName"] as String,
+                contentTemplateName = contentTemplateName,
                 templateParams = (fileMap["templateParams"] as? Map<String, Any>).orEmpty()
             )
         } ?: if (filesDirectory != null) {
