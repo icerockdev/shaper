@@ -39,8 +39,9 @@ class Shaper(private val templateConfig: TemplateConfig) {
         templateConfig.files.forEach { fileConfig ->
             val allParams = templateConfig.globalParams + fileConfig.templateParams
 
-            val fileNameTemplate = handlebars.compileInline(fileConfig.pathTemplate)
+            val fileNameTemplate = handlebars.compileInline(fileConfig.pathTemplate.replace("\\", "/"))
             val filePath = fileNameTemplate.apply(allParams)
+            if (filePath.contains(NOT_INCLUDE)) return@forEach
 
             val file = File(outputPath, filePath)
             with(file.parentFile) {
@@ -68,5 +69,9 @@ class Shaper(private val templateConfig: TemplateConfig) {
             resultWriter.appendLine()
         }
         return resultWriter.toString()
+    }
+
+    companion object {
+        const val NOT_INCLUDE = "{not_include}"
     }
 }

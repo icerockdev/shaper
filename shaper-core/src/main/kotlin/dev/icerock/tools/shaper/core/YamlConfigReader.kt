@@ -69,19 +69,16 @@ object YamlConfigReader {
                 contentTemplateName = fileMap["contentTemplateName"] as String,
                 templateParams = (fileMap["templateParams"] as? Map<String, Any>).orEmpty()
             )
-        }
-            ?: if (filesDirectory != null) {
-                PathLocator.set(filesDirectory, directory.absolutePath)
-                val filesDir = File(directory, filesDirectory)
-                val rootPrefix = filesDir.path + "/"
-
-                filesDir.walkTopDown().filterNot { it.isDirectory }.map {
-                    TemplateConfig.FileConfig(
-                        pathTemplate = it.path.removeSuffix(".hbs").removePrefix(rootPrefix),
-                        contentTemplateName = it.path,
-                        templateParams = emptyMap()
-                    )
-                }.toList()
-            } else emptyList()
+        } ?: if (filesDirectory != null) {
+            PathLocator.set(filesDirectory, directory.absolutePath)
+            val filesDir = File(directory, filesDirectory)
+            filesDir.walkTopDown().filterNot { it.isDirectory }.map {
+                TemplateConfig.FileConfig(
+                    pathTemplate = it.relativeTo(filesDir).path.removeSuffix(".hbs"),
+                    contentTemplateName = it.path,
+                    templateParams = emptyMap()
+                )
+            }.toList()
+        } else emptyList()
     }
 }
