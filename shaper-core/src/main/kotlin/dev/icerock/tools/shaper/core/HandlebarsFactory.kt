@@ -36,6 +36,9 @@ object HandlebarsFactory {
         handlebars.registerHelper("eq", Helper<String> { context, options ->
             context == options.params[0]
         })
+        handlebars.registerHelper("incl", Helper<Boolean> { include, _ ->
+            if (include) "" else Shaper.NOT_INCLUDE
+        })
 
         return handlebars
     }

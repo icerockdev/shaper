@@ -49,7 +49,7 @@ class ConfigOverrider {
         println("Default: $value (Press enter to skip change)")
         val input = readLine() ?: return value
         val newValue = if (input.isBlank()) value else mapper(input)
-        println("$path = $newValue")
+        println("$path = $newValue\n")
         return newValue
     }
 
