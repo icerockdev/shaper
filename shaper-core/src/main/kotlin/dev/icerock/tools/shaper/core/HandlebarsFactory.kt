@@ -31,6 +31,9 @@ object HandlebarsFactory {
         handlebars.registerHelper("stu", Helper<String> { context, _ ->
             context.snakeToUpperCamelCase()
         })
+        handlebars.registerHelper("incl", Helper<Boolean> { include, _ ->
+            if (include) "" else Shaper.NOT_INCLUDE
+        })
         return handlebars
     }
 }

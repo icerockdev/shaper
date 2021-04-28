@@ -40,11 +40,9 @@ object YamlConfigReader {
             }
         } else if (filesDirectory != null) {
             val filesDir = File(directory, filesDirectory)
-            val rootPrefix = filesDir.path + "/"
-
             filesDir.walkTopDown().filterNot { it.isDirectory }.map {
                 TemplateConfig.FileConfig(
-                    pathTemplate = it.path.removeSuffix(".hbs").removePrefix(rootPrefix),
+                    pathTemplate = it.relativeTo(filesDir).path.removeSuffix(".hbs"),
                     contentTemplateName = it.path,
                     templateParams = emptyMap()
                 )
