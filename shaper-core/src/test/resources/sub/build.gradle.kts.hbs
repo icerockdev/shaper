@@ -1,0 +1,16 @@
+package sub
+
+plugins {
+    id("org.jetbrains.kotlin.jvm") version "1.4.20"
+}
+# Sub-file {{{{raw}}}}{{test}}{{{{/raw}}}}
+dependencies {
+{{~#if (or (eq "test1" "test") (eq "test2" "test2"))}}
+{{~#if (and (eq "test" "test") (eq "test2" "test2"))}}
+    implements("dep1")
+{{/if~}}
+{{/if~}}
+{{~#if (or (eq "test1" "test") (eq "test" "test2"))}}
+    implements("dep2")
+{{~/if~}}
+}

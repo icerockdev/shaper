@@ -10,6 +10,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class ShaperTest {
+
     @Test
     fun `generation of gradle module`() {
         val buildGradleFile = TemplateConfig.FileConfig(
@@ -39,6 +40,24 @@ class ShaperTest {
         assertFileEquals(
             expectedResourceName = "Test.kt",
             actualFilePath = "build/test/src/main/kotlin/dev/icerock/test/Test.kt"
+        )
+    }
+
+    @Test
+    fun `with yaml test`() {
+        val result = YamlConfigReader.read(File("src/test/resources/configForShaper.yaml"))
+
+        val shaper = Shaper(templateConfig = result)
+        shaper.execute("build/test")
+
+        assertFileEquals(
+            expectedResourceName = "sub/build.gradle.kts",
+            actualFilePath = "build/test/sub/build.gradle.kts"
+        )
+
+        assertFileEquals(
+            expectedResourceName = "build.gradle.kts",
+            actualFilePath = "build/test/build.gradle.kts"
         )
     }
 

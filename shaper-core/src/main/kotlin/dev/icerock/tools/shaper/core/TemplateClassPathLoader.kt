@@ -4,7 +4,6 @@
 
 package dev.icerock.tools.shaper.core
 
-import com.github.jknack.handlebars.internal.lang3.Validate
 import com.github.jknack.handlebars.io.TemplateSource
 import com.github.jknack.handlebars.io.URLTemplateLoader
 import com.github.jknack.handlebars.io.URLTemplateSource
@@ -20,10 +19,16 @@ class TemplateClassPathLoader() : URLTemplateLoader() {
     }
 
     override fun sourceAt(location: String?): TemplateSource? {
-        Validate.notEmpty(location, "The uri is required.")
-        val templateFile = File(location)
+        if (location == null) throw Exception("The uri is required.")
+
+        val templateFile = if (PathLocator.getBaseDir(location) == null) {
+            File(location)
+        } else {
+            File(PathLocator.getAbsolutePath(location))
+        }
+
         return if (templateFile.exists()) {
-            FileTemplateSource(templateFile)
+            FileTemplateSource(templateFile, location)
         } else {
             URLTemplateSource(location, getResource(location) ?: throw FileNotFoundException(location))
         }

@@ -1,0 +1,16 @@
+globalParams:
+  packageName: dev.icerock.shaper.sample.kmm.auth
+  moduleName: Auth
+  androidMainDeps:
+    - lifecycle
+    - recyclerView
+  dependencies:
+    - dep1
+    - dep2
+files:
+  - pathTemplate: 'build.gradle.kts'
+    contentTemplateName: build.gradle.kts.hbs
+  - pathTemplate: 'sub/build.gradle.kts'
+    contentTemplateName: sub/build.gradle.kts.hbs
+includes:
+  - includes

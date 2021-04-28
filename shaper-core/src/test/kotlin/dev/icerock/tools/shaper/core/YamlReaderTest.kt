@@ -26,13 +26,13 @@ class YamlReaderTest {
         assertEquals("build.gradle.kts", files[0].pathTemplate)
         assertThat(
             files[0].contentTemplateName,
-            containsString("shaper/shaper-core/src/test/resources/kmm-module/build.gradle.kts.hbs")
+            containsString("kmm-module/build.gradle.kts.hbs")
         )
         assertEquals(0, files[0].templateParams.count())
         assertEquals("src/commonMain/kotlin/{{dts packageName}}/di/{{moduleName}}Factory.kt", files[1].pathTemplate)
         assertThat(
             files[1].contentTemplateName,
-            containsString("shaper/shaper-core/src/test/resources/kmm-module/Factory.kt.hbs")
+            containsString("kmm-module/Factory.kt.hbs")
         )
         assertEquals(0, files[1].templateParams.count())
         assertThat(
@@ -42,7 +42,7 @@ class YamlReaderTest {
         assertEquals("=== Tips for feature setup ===", outputs[0].outputTitle)
         assertThat(
             outputs[0].contentTemplateName,
-            containsString("shaper/shaper-core/src/test/resources/kmm-module/console.output.hbs")
+            containsString("kmm-module/console.output.hbs")
         )
         assertEquals(0, outputs[0].templateParams.count())
     }
