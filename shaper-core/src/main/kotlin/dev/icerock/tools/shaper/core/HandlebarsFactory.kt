@@ -40,6 +40,18 @@ object HandlebarsFactory {
             if (include) "" else Shaper.NOT_INCLUDE
         })
 
+        handlebars.registerHelper("or", Helper<Boolean> { context, options ->
+            context || options.params[0] as Boolean
+        })
+
+        handlebars.registerHelper("and", Helper<Boolean> { context, options ->
+            context && options.params[0] as Boolean
+        })
+
+        handlebars.registerHelper("raw", Helper<Map<String, String>> { context, options ->
+            options.fn()
+        })
+
         return handlebars
     }
 }
