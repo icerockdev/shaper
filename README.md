@@ -106,6 +106,26 @@ class Test {
 }
 ```
 
+## Include/exclude files
+
+You can include/exclude files using global parameters in config file.
+
+1. Add global parameter(s) that can have value `true` or `false`.
+
+2. Add `{{incl ...}}` helper with the specified parameter in file path and/or file name.
+
+```
+globalParams:
+  ...
+  addTests: false
+  addDefaultTest: false
+files:
+  - pathTemplate: '{{incl addTests}}src/main/kotlin/package/{{incl addDefaultTest}}DefaultTest.kt'
+    contentTemplateName: DefaultTest.kt
+```
+
+In this example, file `DefaultTest.kt` will be added only if both parameters `addFragment` and `addDefaultTest` are set to `true`.
+
 ## Partials
 
 For use partials you can put your `.hbs` files in `includes` directories (multi-nesting support). 
