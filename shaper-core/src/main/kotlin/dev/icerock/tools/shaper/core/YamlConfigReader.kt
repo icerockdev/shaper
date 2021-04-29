@@ -25,14 +25,14 @@ object YamlConfigReader {
     private fun buildConfig(map: Map<String, Any>, directory: File): TemplateConfig {
         val globalParams = map["globalParams"] as? Map<String, Any>
         val files = map["files"]
-        val includes = map["includes"]
+        val includes = map["includes"] as? List<String>
 
         val filesConfigs: List<TemplateConfig.FileConfig> = collectFileConfig(files, directory)
         val outputsConfigs: List<TemplateConfig.OutputConfig> = collectOutputConfig(
             map["outputs"] as? List<Map<String, Any>>,
             directory
         )
-        val includesConfigs = collectIncludeConfig(includes as List<String>, directory)
+        val includesConfigs = collectIncludeConfig(includes, directory)
 
         return TemplateConfig(
             globalParams = globalParams.orEmpty(),
@@ -63,24 +63,23 @@ object YamlConfigReader {
         val filesList = files as? List<Map<String, Any>>
         val filesDirectory = files as? String
         return filesList?.map { fileMap ->
-            val templateFile = File(directory, fileMap["contentTemplateName"] as String)
+            val contentTemplateName = fileMap["contentTemplateName"] as String
+            PathLocator.set(contentTemplateName, directory.absolutePath)
             TemplateConfig.FileConfig(
                 pathTemplate = fileMap["pathTemplate"] as String,
-                contentTemplateName = templateFile.path,
+                contentTemplateName = contentTemplateName,
                 templateParams = (fileMap["templateParams"] as? Map<String, Any>).orEmpty()
             )
-        }
-            ?: if (filesDirectory != null) {
-                val filesDir = File(directory, filesDirectory)
-                val rootPrefix = filesDir.path + "/"
-
-                filesDir.walkTopDown().filterNot { it.isDirectory }.map {
-                    TemplateConfig.FileConfig(
-                        pathTemplate = it.path.removeSuffix(".hbs").removePrefix(rootPrefix),
-                        contentTemplateName = it.path,
-                        templateParams = emptyMap()
-                    )
-                }.toList()
-            } else emptyList()
+        } ?: if (filesDirectory != null) {
+            PathLocator.set(filesDirectory, directory.absolutePath)
+            val filesDir = File(directory, filesDirectory)
+            filesDir.walkTopDown().filterNot { it.isDirectory }.map {
+                TemplateConfig.FileConfig(
+                    pathTemplate = it.relativeTo(filesDir).path.removeSuffix(".hbs"),
+                    contentTemplateName = it.path,
+                    templateParams = emptyMap()
+                )
+            }.toList()
+        } else emptyList()
     }
 }
