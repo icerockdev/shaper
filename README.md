@@ -114,7 +114,7 @@ You can include/exclude files using global parameters in config file.
 
 2. Add `{{incl ...}}` helper with the specified parameter in file path and/or file name.
 
-```
+```yaml
 globalParams:
   ...
   addTests: false
@@ -160,6 +160,55 @@ And use the partials in templates:
     val {{this.name}}: {{> type this nullableOnly=true}} = obj.{{this.name~}}
 {{~/each}}
 {{> hello name="Developer"}}
+```
+
+## Helpers
+In config yaml file:
+```yaml
+globalParams:
+  items:
+    - name: "name1"
+      type: "type1"
+      ...
+    - name: "name2"
+      type: "type2"
+  ...
+```
+`filterByAllOf` filters `items` by all pair key-value (AND condition), for example:
+```handlebars
+{{~#each (filterByAllOf items type="type1" name="name1")}}
+{{! there will only be items when type="type1" and name="name1"}}
+{{~/each}}
+```
+`filterByOneOf` filters `items` by one of pair key-value (OR condition), for example:
+```handlebars
+{{~#each (filterByAllOf items type="type1" name="name2")}}
+{{! there will only be items when type="type1" or name="name2"}}
+{{~/each}}
+```
+`containsAllOf` checks for all pair key-value (AND condition) in `items`, for example:
+```handlebars
+{{~#if (containsAllOf items type="type1" name="name1")}}
+...
+{{~/if}}
+```
+`containsOneOf` checks for one of pair key-value (OR condition) in `items`, for example:
+```handlebars
+{{~#if (containsOneOf items type="type1" name="name2")}}
+...
+{{~/if}}
+```
+`containsKey` checks for exist key in `items`, for example:
+```handlebars
+{{~#if (containsKey items "type")}}
+...
+{{~/if}}
+```
+`containsValue` checks for exist value in `items`, for example:
+```handlebars
+{{~#if (containsValue items "type1")}}
+...
+{{~/if}}
 ```
 
 ## License
