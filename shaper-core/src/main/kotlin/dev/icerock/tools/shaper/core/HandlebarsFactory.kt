@@ -48,8 +48,72 @@ object HandlebarsFactory {
             context && options.params[0] as Boolean
         })
 
-        handlebars.registerHelper("raw", Helper<Map<String, String>> { context, options ->
+        handlebars.registerHelper("raw", Helper<Map<String, String>> { _, options ->
             options.fn()
+        })
+
+        handlebars.registerHelper("filterByAllOf", Helper<ArrayList<Map<Any, Any>>> { context, options ->
+            if (options.hash.isEmpty()) {
+                return@Helper arrayListOf<Map<Any, Any>>()
+            }
+
+            val keyValueMap = options.hash.toMap()
+            context.filter { map: Map<Any, Any> ->
+                keyValueMap.filter { entry: Map.Entry<String, Any> ->
+                    map.containsKey(entry.key) && map[entry.key] == entry.value
+                }.size == keyValueMap.size
+            }
+        })
+
+        handlebars.registerHelper("filterByOneOf", Helper<ArrayList<Map<Any, Any>>> { context, options ->
+            if (options.hash.isEmpty()) {
+                return@Helper arrayListOf<Map<Any, Any>>()
+            }
+
+            val keyValueMap = options.hash.toMap()
+            context.filter { map: Map<Any, Any> ->
+                keyValueMap.filter { entry: Map.Entry<String, Any> ->
+                    map.containsKey(entry.key) && map[entry.key] == entry.value
+                }.isNotEmpty()
+            }
+        })
+
+        handlebars.registerHelper("containsAllOf", Helper<ArrayList<Map<Any, Any>>> { context, options ->
+            if (options.hash.isEmpty()) {
+                return@Helper false
+            }
+
+            val keyValueMap = options.hash.toMap()
+            context.any { map: Map<Any, Any> ->
+                keyValueMap.filter { entry: Map.Entry<String, Any> ->
+                    map.containsKey(entry.key) && map[entry.key] == entry.value
+                }.size == keyValueMap.size
+            }
+        })
+
+        handlebars.registerHelper("containsOneOf", Helper<ArrayList<Map<Any, Any>>> { context, options ->
+            if (options.hash.isEmpty()) {
+                return@Helper false
+            }
+
+            val keyValueMap = options.hash.toMap()
+            context.any { map: Map<Any, Any> ->
+                keyValueMap.filter { entry: Map.Entry<String, Any> ->
+                    map.containsKey(entry.key) && map[entry.key] == entry.value
+                }.isNotEmpty()
+            }
+        })
+
+        handlebars.registerHelper("containsKey", Helper<ArrayList<Map<Any, Any>>> { context, options ->
+            context.any { map: Map<Any, Any> ->
+                map.keys.contains(options.params[0])
+            }
+        })
+
+        handlebars.registerHelper("containsValue", Helper<ArrayList<Map<Any, Any>>> { context, options ->
+            context.any { map: Map<Any, Any> ->
+                map.values.contains(options.params[0])
+            }
         })
 
         return handlebars
