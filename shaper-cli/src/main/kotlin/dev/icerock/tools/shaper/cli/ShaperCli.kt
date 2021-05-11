@@ -26,16 +26,22 @@ fun main(args: Array<String>) {
         description = "output files directory",
     ).default(".")
 
+    val skipOverrider: Boolean by parser.option(
+        type = ArgType.Boolean,
+        shortName = "s",
+        description = "skip overrider"
+    ).default(false)
+
     parser.parse(args)
 
     val shaperConfig = ShaperConfig.read()
     val templatesRepository = TemplatesRepository(shaperConfig)
     val config = templatesRepository.getTemplateConfig(input)
-    val configOverrider = ConfigOverrider()
 
-    val overridenConfig = config.copy(
-        globalParams = configOverrider.override(config.globalParams)
-    )
+    val overridenConfig = when (skipOverrider) {
+        true -> config
+        else -> config.copy(globalParams = ConfigOverrider().override(config.globalParams))
+    }
 
     val shaper = Shaper(templateConfig = overridenConfig)
     val consoleResult = shaper.execute(output)
