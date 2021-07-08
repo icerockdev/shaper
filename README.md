@@ -7,6 +7,17 @@ Handlebars) and configuration.
 
 `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/icerockdev/shaper/master/install-shaper.sh)"`
 
+## Core library
+```kotlin
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation("dev.icerock.tools:shaper-core:0.4.0")
+}
+```
+
 # Usage
 
 ## CLI
