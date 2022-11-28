@@ -9,6 +9,9 @@ plugins {
 
 dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-cli:0.3.1")
+    /** github.jknack:handlebars uses a slf4j-api package which is working only with slf4j-simple
+     * if github.jknack:handlebars version updated, slf4j-simple needs up version too **/
+    implementation("org.slf4j:slf4j-simple:1.7.25")
     implementation(project(":shaper-core"))
 }
 
