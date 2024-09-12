@@ -16,5 +16,5 @@ buildscript {
 
 subprojects {
     group = "dev.icerock.tools"
-    version = "0.4.1"
+    version = "0.5.0"
 }
