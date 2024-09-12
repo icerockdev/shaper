@@ -38,12 +38,12 @@ fun main(args: Array<String>) {
     val templatesRepository = TemplatesRepository(shaperConfig)
     val config = templatesRepository.getTemplateConfig(input)
 
-    val overridenConfig = when (skipOverrider) {
+    val overriddenConfig = when (skipOverrider) {
         true -> config
         else -> config.copy(globalParams = ConfigOverrider().override(config.globalParams))
     }
 
-    val shaper = Shaper(templateConfig = overridenConfig)
+    val shaper = Shaper(templateConfig = overriddenConfig)
     val consoleResult = shaper.execute(output)
     println(consoleResult)
 }

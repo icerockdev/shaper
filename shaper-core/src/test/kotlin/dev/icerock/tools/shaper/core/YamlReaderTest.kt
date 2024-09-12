@@ -5,7 +5,7 @@
 package dev.icerock.tools.shaper.core
 
 import org.hamcrest.CoreMatchers.containsString
-import org.junit.Assert.assertThat
+import org.hamcrest.MatcherAssert.assertThat
 import java.io.File
 import kotlin.test.Test
 import kotlin.test.assertEquals
