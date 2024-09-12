@@ -8,10 +8,10 @@ plugins {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-cli:0.3.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-cli:0.3.6")
     /** github.jknack:handlebars uses a slf4j-api package which is working only with slf4j-simple
      * if github.jknack:handlebars version updated, slf4j-simple needs up version too **/
-    implementation("org.slf4j:slf4j-simple:1.7.25")
+    implementation("org.slf4j:slf4j-simple:1.7.32")
     implementation(project(":shaper-core"))
 }
 
@@ -27,7 +27,7 @@ tasks.create("install") {
     doFirst {
         copy {
             val userHome = System.getProperty("user.home")
-            from(file("$buildDir/install"))
+            from(file("${layout.buildDirectory}/install"))
             into(file("$userHome/.shaper"))
         }
     }

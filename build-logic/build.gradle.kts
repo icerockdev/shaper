@@ -10,5 +10,5 @@ repositories {
 }
 
 dependencies {
-    api("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.20")
+    api("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.25")
 }

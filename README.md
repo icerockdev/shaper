@@ -14,7 +14,7 @@ repositories {
 }
 
 dependencies {
-    implementation("dev.icerock.tools:shaper-core:0.4.0")
+    implementation("dev.icerock.tools:shaper-core:0.4.1")
 }
 ```
 
@@ -219,6 +219,20 @@ globalParams:
 ```handlebars
 {{~#if (containsValue items "type1")}}
 ...
+{{~/if}}
+```
+`currentTimestamp` returns the current UNIX time, for example:
+```handlebars
+{{currentTimestamp}}
+```
+`currentDateTime` returns the current date and/or time in a specified format, for example:
+```handlebars
+{{currentDateTime "yyyy-MM-dd HH:mm:ss"}}
+```
+`renderPartial` render partial template like `{{> paramTemplate paramName="test"}}` and return it value, for example:
+```handlebars
+{{~#if (eq (renderPartial "paramTemplate" paramName="test") "test")}}
+    ...
 {{~/if}}
 ```
 
