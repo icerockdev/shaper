@@ -14,7 +14,7 @@ repositories {
 }
 
 dependencies {
-    implementation("dev.icerock.tools:shaper-core:0.5.0")
+    implementation("dev.icerock.tools:shaper-core:0.5.1")
 }
 ```
 

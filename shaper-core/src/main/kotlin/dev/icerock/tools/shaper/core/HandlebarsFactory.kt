@@ -24,7 +24,7 @@ object HandlebarsFactory {
         })
 
         handlebars.registerHelper("renderPartial", Helper<String> { context, options ->
-            handlebars.compile(context).apply(options.hash)
+            handlebars.compile(context).apply(options.context.combine(options.hash))
         })
 
         registerConditionHelpers(handlebars)
